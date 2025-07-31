@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Basic URL Shortener</title>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+    <input type="text" id="originalUrl" placeholder="Enter URL here" size="50"/>
+    <button onclick="shortenUrl()">Shorten</button>
+
+    <p id="result"></p>
+
+    <script>
+        function shortenUrl() {
+            const url = document.getElementById('originalUrl').value.trim();
+            const result = document.getElementById('result');
+
+            if (!url) {
+                result.innerText = "Please enter a valid URL.";
+                return;
+            }
+
+            // Backend API call - POST /shorten?url=value
+            fetch(`/shorten?url=${encodeURIComponent(url)}`, {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(shortUrl => {
+                result.innerHTML = `Short URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+            })
+            .catch(error => {
+                result.innerText = "Error creating short URL: " + error;
+            });
+        }
+    </script>
+</body>
+</html>
